@@ -1,0 +1,96 @@
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:meta';
+
+@import './functions.scss';
+
+$unit: 16px;
+$font-size: 1 * $unit !default;
+$bg-lightness: -15% !default;
+$fg-lightness: 10% !default;
+
+/* Base Colors */
+$color-bg: hsl(0, 0%, 15%);
+$color-bg-hover: lighten(rgba($color-bg, 0.25), 7.5%);
+$color-bg-focus: lighten(rgba($color-bg, 0.33), 15%);
+
+$color-base: rgba(0, 0, 0, 0.33);
+$color-border: rgba(255, 255, 255, 0.1);
+
+$color-text: rgba(255, 255, 255, 1);
+$color-text-darker: darken($color-text, 12.5%);
+$color-text-translucent: rgba($color-text, 0.5);
+$color-text-semi-translucent: rgba($color-text, 0.75);
+
+/* TGUI Elements Colors */
+$color-primary: hsl(210, 37.5%, 45%);
+$color-secondary: hsl(210, 57.5%, 50%);
+$color-red: hsl(0, 70%, 50%);
+$color-orange: hsl(40, 90%, 40%);
+$color-yellow: hsl(50, 95%, 40%);
+$color-olive: hsl(70, 80%, 45%);
+$color-green: hsl(95, 65%, 40%);
+$color-teal: hsl(175, 100%, 35%);
+$color-blue: hsl(205, 70%, 45%);
+$color-violet: hsl(260, 60%, 50%);
+$color-purple: hsl(285, 60%, 50%);
+$color-pink: hsl(325, 75%, 55%);
+$color-brown: hsl(25, 45%, 45%);
+$color-label: hsl(215, 20%, 55%);
+$color-gray: hsl(0, 0%, 45%);
+
+$_gen_map: (
+  'primary': $color-primary,
+  'secondary': $color-secondary,
+  'red': $color-red,
+  'orange': $color-orange,
+  'yellow': $color-yellow,
+  'olive': $color-olive,
+  'green': $color-green,
+  'teal': $color-teal,
+  'blue': $color-blue,
+  'violet': $color-violet,
+  'purple': $color-purple,
+  'pink': $color-pink,
+  'brown': $color-brown,
+  'gray': $color-gray,
+  'label': $color-label,
+);
+
+// Background color names for which to generate a color map
+$bg-map-keys: map.keys($_gen_map) !default;
+
+$bg-map: ();
+@each $color-name in $bg-map-keys {
+  $bg-map: map-merge(
+    $bg-map,
+    (
+      $color-name: bg(map.get($_gen_map, $color-name)),
+    )
+  );
+}
+
+/* Scrollbar */
+$color-scrollbar-base: hsl(0, 0%, 10%);
+$color-scrollbar-thumb: hsl(0, 0%, 20%);
+
+/* Shadows */
+$shadow-small: 0px em(15px) em(20px) 0px rgba(0, 0, 0, 0.75);
+$shadow-medium: 0px em(25px) em(30px) em(5px) rgba(0, 0, 0, 0.75);
+$shadow-big: 0px 0px em(35px) em(5px) rgba(0, 0, 0, 0.75);
+
+/* Border Radius */
+$border-radius-small: 0.275rem;
+$border-radius-medium: calc($border-radius-small * 2);
+$border-radius-large: calc($border-radius-small * 4);
+$border-radius-round: 9999px;
+
+/* Transition */
+$transition-time: 0.2s;
+$transition-time-fast: calc($transition-time / 2);
+$transition-delay: calc($transition-time * 2);
+
+/* Shortcuts */
+$border-classic: em(1px) solid $color-border;
+$blur-default: saturate(150%) blur(em(24px));
+$nt-image: url(../../assets/images/bg-nanotrasen.svg);

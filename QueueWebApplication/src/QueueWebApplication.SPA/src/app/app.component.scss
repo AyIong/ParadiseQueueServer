@@ -1,3 +1,5 @@
+@import './components/base.scss';
+
 main {
   position: fixed;
   top: 0;
@@ -18,13 +20,13 @@ main {
   align-items: center;
   height: 4rem;
   padding: 0 0.5rem;
-  background-color: var(--color-base);
+  background-color: $color-base;
 
   &__title {
     display: inline-block;
     font-weight: bold;
     font-size: 1.15rem;
-    color: var(--color-text);
+    color: $color-text;
   }
 
   &__icon {
@@ -46,6 +48,6 @@ main {
   font-size: 0.55rem;
   padding: 0 0.5rem;
   height: 1.6rem;
-  background-color: var(--color-base);
-  color: var(--color-gray);
+  background-color: $color-base;
+  color: $color-gray;
 }

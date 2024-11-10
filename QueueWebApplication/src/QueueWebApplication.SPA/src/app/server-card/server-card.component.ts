@@ -7,11 +7,12 @@ import { PlayerData } from '../interfaces/player-data';
 import { QueueState } from '../enums/queue-state';
 import { QueueResponse } from '../enums/queue-response';
 import { firstValueFrom } from 'rxjs';
+import { ButtonComponent } from '../components/button/button.component';
 
 @Component({
   selector: 'app-server-card',
   standalone: true,
-  imports: [AsyncPipe, NgClass, NgIf],
+  imports: [AsyncPipe, NgClass, NgIf, ButtonComponent],
   templateUrl: './server-card.component.html',
   styleUrl: './server-card.component.scss',
 })

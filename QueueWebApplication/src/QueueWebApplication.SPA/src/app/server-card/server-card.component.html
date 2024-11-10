@@ -11,19 +11,23 @@
     <div class="server-card__content-buttons">
       @switch (queueState) {
         @case (QueueState.NotInQueue) {
-          <button class="queue-join" type="button" [disabled]="disabled$ | async" (click)="connectToQueue()">
+          <app-button [fluid]="true" [disabled]="disabled$ | async" (onClick)="connectToQueue()">
             {{ server().currentPlayers < server().maximumPlayers ? "Играть" : "В очередь" }}
-          </button>
+          </app-button>
         }
         @case (QueueState.InQueue) {
-          <button class="queue" type="button" [disabled]="disabled$ | async">
+          <app-button [fluid]="true" color="'purple'" [disabled]="disabled$ | async">
             Вы {{ queuePosition$ | async }}й в очереди
-          </button>
+          </app-button>
         }
         @case (QueueState.AllowedToConnect) {
-          <a href="{{ serverUrl }}">
-            <button class="join" type="button" [disabled]="disabled$ | async">Играть</button>
-          </a>
+          <app-button
+            [fluid]="true"
+            [color]="server().whitelisted ? 'orange' : 'green'"
+            [disabled]="disabled$ | async"
+            link="{{ serverUrl }}">
+            Играть
+          </app-button>
         }
       }
     </div>

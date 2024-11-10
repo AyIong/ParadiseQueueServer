@@ -1,0 +1,101 @@
+@import '../base.scss';
+
+@mixin button-color($color, $text-color: null, $translucent: false) {
+  // Adapt text color to background luminance to ensure high contast
+  $luminance: luminance($color);
+  $dynamic-text-color: if($luminance > 0.4, rgba(0, 0, 0, 1), rgba(255, 255, 255, 1));
+
+  background-color: if($translucent, rgba($color, 0.33), $color);
+  color: if($text-color != null, $text-color, $dynamic-text-color);
+
+  &:hover {
+    background-color: lighten($color, 20%);
+    color: $dynamic-text-color;
+  }
+
+  &:active {
+    background-color: darken($color, 5%);
+    color: rgba($dynamic-text-color, 0.66);
+    box-shadow: inset 0 0 0.1em 0.1em rgba(0, 0, 0, 0.2);
+  }
+}
+
+.Button {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  display: inline-block;
+  line-height: 1.667em;
+  padding: 0 0.5em;
+  margin: 0 em(2px) em(2px) 0;
+  white-space: nowrap;
+  outline: 0;
+  border-radius: $border-radius-small;
+  transition:
+    background-color $transition-time,
+    color $transition-time,
+    box-shadow $transition-time;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  &--ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &--fluid {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  &--multiLine {
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  &--hasContent {
+    .fa,
+    .fas,
+    .far {
+      margin-right: 0.25em;
+    }
+  }
+
+  .fa,
+  .fas,
+  .far {
+    margin-left: -0.25em;
+    margin-right: -0.25em;
+    min-width: 1.333em;
+    text-align: center;
+  }
+}
+
+@each $color-name, $color-value in $bg-map {
+  .Button--color-#{$color-name} {
+    @include button-color($color-value);
+  }
+}
+
+.Button--color-transparent {
+  @include button-color(rgba($color-bg, 0), $color-text-semi-translucent);
+}
+
+.Button--color-default {
+  @include button-color($color-primary);
+}
+
+.Button--disabled {
+  cursor: default;
+  background-color: $color-gray !important;
+  color: $color-text-translucent !important;
+  box-shadow: none !important;
+}
+
+.Button--selected,
+.Button--selected--translucent {
+  @include button-color($color-green);
+}

@@ -1,0 +1,11 @@
+<div
+  class="Button {{ colorClass }}"
+  [ngClass]="{
+    'Button--disabled': disabled,
+    'Button--selected': selected,
+    'Button--fluid': fluid
+  }"
+  (click)="onClickHandler()">
+  <i *ngIf="icon" class="fas fa-{{ icon }}"></i>
+  <ng-content></ng-content>
+</div>
