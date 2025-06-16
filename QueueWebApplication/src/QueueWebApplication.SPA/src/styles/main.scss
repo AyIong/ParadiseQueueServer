@@ -1,0 +1,11 @@
+@use "sass:meta";
+@use "tgui-core/styles";
+
+// Core styles
+@include meta.load-css("./reset.scss");
+
+// Components styles
+@include meta.load-css("./components/Footer.scss");
+@include meta.load-css("./components/Header.scss");
+@include meta.load-css("./components/Page.scss");
+@include meta.load-css("./components/Servers.scss");

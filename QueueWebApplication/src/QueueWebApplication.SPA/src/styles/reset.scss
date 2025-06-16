@@ -1,0 +1,10 @@
+html,
+body {
+  font-size: var(--font-size, 12px);
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  background-color: var(--color-base);
+  color: var(--color-text, hsl(0, 0%, 100%));
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-base);
+}
