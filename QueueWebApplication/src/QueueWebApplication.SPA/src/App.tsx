@@ -1,17 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Footer, Header, Page, ServerCard, Servers } from './components';
-import { useMockServersService } from './servers-services';
-
-function ServersPage() {
-  const { servers } = useMockServersService();
-  return (
-    <Servers>
-      {servers.map((server) => (
-        <ServerCard key={server.name} {...server} />
-      ))}
-    </Servers>
-  );
-}
+import { Footer, Header, Page, Servers } from './components';
 
 export function App() {
   return (
@@ -19,7 +7,7 @@ export function App() {
       <Header title="SS220 - Лобби" />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<ServersPage />} />
+          <Route path="/" element={<Servers />} />
         </Routes>
       </BrowserRouter>
       <Footer />

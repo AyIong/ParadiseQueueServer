@@ -1,9 +1,17 @@
 import { Button } from 'tgui-core/components';
 import { classes } from 'tgui-core/react';
-import type { Server } from '../common/interfaces';
+import type { PlayerData, Server } from '../common/interfaces';
 
-export function ServerCard(props: Server) {
-  const { name, currentPlayers, maximumPlayers, queuePosition, whitelisted, ipAddress, port } = props;
+type ServerCardProps = {
+  server: Server;
+  playerData: PlayerData;
+};
+
+export function ServerCard(props: ServerCardProps) {
+  const { server, playerData } = props;
+  const { name, ipAddress, port, currentPlayers, maximumPlayers, queuePosition, whitelisted } = server;
+  // biome-ignore lint/correctness/noUnusedVariables: WiP
+  const { ckey, role, donatorTier, banned, whitelistPasses } = playerData;
 
   return (
     <div className={classes(['ServerCard', whitelisted && 'ServerCard--whitelisted'])}>
