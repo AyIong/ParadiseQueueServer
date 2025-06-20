@@ -4,7 +4,7 @@ import { Footer, Header, Page, Servers } from './components';
 export function App() {
   return (
     <Page>
-      <Header title="SS220 - Лобби" />
+      <Header title={`Добро пожаловать на SS220!`} />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Servers />} />

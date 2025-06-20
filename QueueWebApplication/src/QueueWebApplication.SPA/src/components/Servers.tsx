@@ -16,10 +16,10 @@ function parsePlayerData(data: PlayerJwt): PlayerData {
 export function Servers() {
   const [haveToken, setHaveToken] = useState(false);
   const [playerData, setPlayerData] = useState<PlayerData>({
-    ckey: 'guest',
+    ckey: 'pepega',
     role: 'nobody',
     donatorTier: 0,
-    banned: true,
+    banned: false,
     whitelistPasses: [],
   });
 
@@ -38,9 +38,8 @@ export function Servers() {
     setHaveToken(true);
   }, []);
 
-  // инициализируем список серверов
   useEffect(() => {
-    if (servers.length && haveToken) {
+    if (servers.length && (haveToken || !import.meta.env.PROD)) {
       setUpdatedServers(servers);
     }
   }, [servers, haveToken]);
@@ -52,7 +51,7 @@ export function Servers() {
 
     setUpdatedServers((prev) =>
       prev.map((server) => {
-        const status = serversStatus.find((s) => s.name === server.name);
+        const status = serversStatus.find((serv) => serv.name === server.name);
         return status ? { ...server, currentPlayers: status.currentPlayers } : server;
       }),
     );
@@ -71,7 +70,7 @@ export function Servers() {
   }, [queuePosition]);
 
   let children: string | ReactNode;
-  if (!haveToken) {
+  if (!haveToken && import.meta.env.PROD) {
     children = <div>This site is available only through our byond queue server</div>;
   } else if (updatedServers.length) {
     children = updatedServers.map((server) => <ServerCard key={server.name} server={server} playerData={playerData} />);

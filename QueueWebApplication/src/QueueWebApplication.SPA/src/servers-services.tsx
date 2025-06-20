@@ -41,30 +41,6 @@ const mockServers: Server[] = [
   },
 ];
 
-const mockServersStatus: ServerStatus[] = [
-  {
-    name: 'Green',
-    currentPlayers: 100,
-  },
-  {
-    name: 'Black',
-    currentPlayers: 100,
-  },
-  {
-    name: 'Prime',
-    currentPlayers: 20,
-  },
-  {
-    name: 'TG',
-    currentPlayers: 220,
-  },
-];
-
-const mockQueuePosition: QueuePosition = {
-  serverName: 'Black',
-  position: 5,
-};
-
 export function useServersService(production: boolean) {
   const [servers, setServers] = useState<Server[]>([]);
   const [serversStatus, setServersStatus] = useState<ServerStatus[]>([]);
@@ -73,8 +49,6 @@ export function useServersService(production: boolean) {
   useEffect(() => {
     if (!production) {
       setServers(mockServers);
-      setServersStatus(mockServersStatus);
-      setQueuePosition(mockQueuePosition);
       return;
     }
 

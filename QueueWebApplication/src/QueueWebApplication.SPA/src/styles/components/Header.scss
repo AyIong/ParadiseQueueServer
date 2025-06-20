@@ -1,19 +1,20 @@
 .Header {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
   padding: 1rem;
   background-color: var(--color-section);
   color: var(--color-text);
 
   &__Image {
     aspect-ratio: 1 / 1;
-    width: 50px;
+    width: 56px;
   }
 
   &__Title {
     flex-grow: 1;
     font-size: 1.5rem;
     font-weight: bold;
+    font-family: "Arial", sans-serif;
   }
 }

@@ -1,29 +1,120 @@
-import { Button } from 'tgui-core/components';
+import { type ReactNode, useEffect, useState } from 'react';
+import { Button, Divider, Section, Stack } from 'tgui-core/components';
 import { classes } from 'tgui-core/react';
+import { QueueResponse, QueueState } from '../common/enums';
 import type { PlayerData, Server } from '../common/interfaces';
 
-type ServerCardProps = {
+interface ServerCardProps {
   server: Server;
   playerData: PlayerData;
-};
+}
 
-export function ServerCard(props: ServerCardProps) {
-  const { server, playerData } = props;
-  const { name, ipAddress, port, currentPlayers, maximumPlayers, queuePosition, whitelisted } = server;
-  // biome-ignore lint/correctness/noUnusedVariables: WiP
-  const { ckey, role, donatorTier, banned, whitelistPasses } = playerData;
+export function ServerCard({ server, playerData }: ServerCardProps) {
+  const [queueState, setQueueState] = useState(QueueState.NotInQueue);
+  const queuePosition = server.queuePosition;
+
+  const banned = playerData.banned;
+  const notWhitelisted = server.whitelisted && !playerData.whitelistPasses?.includes(server.port);
+  const disabled = banned || notWhitelisted;
+
+  useEffect(() => {
+    if (server.maximumPlayers === -1) {
+      setQueueState(QueueState.AllowedToConnect);
+    }
+
+    if (queuePosition === 0) {
+      setQueueState(QueueState.AllowedToConnect);
+    }
+  }, [queuePosition, server.maximumPlayers]);
+
+  const serverUrl = `byond://${server.ipAddress}:${server.port}`;
+  async function connectToQueue() {
+    const response = await fetch(`/queue/add-client?serverName=${server.name}`, {
+      method: 'POST',
+    }).then((r) => r.json());
+
+    switch (response) {
+      case QueueResponse.AddedToQueue:
+        setQueueState(QueueState.InQueue);
+        break;
+      case QueueResponse.BypassedQueue:
+        setQueueState(QueueState.AllowedToConnect);
+        playHornSound();
+        break;
+      case QueueResponse.Rejected:
+        throw new Error("You shouldn't be able to press connect button");
+    }
+  }
+
+  function playHornSound() {
+    const sound = new Audio('/sounds/adminhelp.ogg');
+    sound.load();
+    sound.volume = 0.15;
+    sound.play().catch(() => {});
+  }
+
+  function getTooltipText() {
+    if (banned) {
+      return 'Вы не можете играть, так как у вас бан!';
+    } else if (notWhitelisted) {
+      return 'У вас отсутствует вайтлист на этот сервер!';
+    }
+  }
+
+  function getColor() {
+    if (disabled) {
+      return 'bad';
+    }
+
+    switch (queueState) {
+      case QueueState.AllowedToConnect:
+        return 'good';
+      case QueueState.Banned:
+        return 'bad';
+      case QueueState.InQueue:
+        return 'warning';
+    }
+  }
 
   return (
-    <div className={classes(['ServerCard', whitelisted && 'ServerCard--whitelisted'])}>
-      <div className="ServerCard__Title">{name}</div>
-      <div className="ServerCard__Players">
-        {currentPlayers}/{maximumPlayers}
-      </div>
-      <div className="ServerCard__Join">
-        <Button onClick={() => window.open(`byond://${ipAddress}:${port}`)}>
-          {queuePosition ? `В очереди (${queuePosition}й)` : 'Присоединиться'}
+    <Section
+      fill
+      title={server.name}
+      className={classes(['ServerCard', server.whitelisted && 'ServerCard--whitelisted'])}
+    >
+      <Stack.Item className="ServerCard__Content">
+        <ServerInfo title="Онлайн">
+          {server.currentPlayers}/{server.maximumPlayers}
+        </ServerInfo>
+        <Divider />
+        <ServerInfo title="Очередь">{server.queuePosition === 0 ? 'Отсутствует' : server.queuePosition}</ServerInfo>
+      </Stack.Item>
+      <Stack.Item className="ServerCard__Join">
+        <Button
+          fluid
+          tooltip={getTooltipText()}
+          color={getColor()}
+          disabled={disabled}
+          onClick={queueState === QueueState.AllowedToConnect ? () => window.open(serverUrl) : connectToQueue}
+        >
+          {queueState === QueueState.InQueue ? `В очереди (${queuePosition}й)` : 'Присоединиться'}
         </Button>
-      </div>
+      </Stack.Item>
+    </Section>
+  );
+}
+
+type ServerInfoProps = {
+  title: string;
+  children: ReactNode;
+};
+
+function ServerInfo(props: ServerInfoProps) {
+  const { title, children } = props;
+  return (
+    <div className="ServerCard__Info">
+      <div className="ServerCard__Info--name">{title}</div>
+      <div className="ServerCard__Info--content">{children}</div>
     </div>
   );
 }

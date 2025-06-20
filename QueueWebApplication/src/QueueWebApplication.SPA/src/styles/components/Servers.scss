@@ -1,3 +1,11 @@
 .Servers {
+  --cell-size: 15rem;
   flex: 1;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--cell-size), 1fr));
+  grid-template-rows: repeat(auto-fill, var(--cell-size));
+  place-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
 }

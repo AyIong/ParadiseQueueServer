@@ -1,0 +1,28 @@
+.ServerCard {
+  margin: 0;
+  width: 100%;
+  height: var(--cell-size);
+
+  &__Content,
+  .Section__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__Content {
+    flex: 1;
+  }
+
+  &__Info {
+    line-height: 1.5rem;
+    font-weight: bold;
+
+    &--name {
+      color: var(--color-blue);
+    }
+  }
+
+  &__Join {
+    text-align: center;
+  }
+}
