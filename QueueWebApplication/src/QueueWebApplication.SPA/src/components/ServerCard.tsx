@@ -22,10 +22,10 @@ export function ServerCard({ server, playerData }: ServerCardProps) {
       setQueueState(QueueState.AllowedToConnect);
     }
 
-    if (queuePosition === 0) {
+    if (queuePosition === 0 && server.currentPlayers < server.maximumPlayers) {
       setQueueState(QueueState.AllowedToConnect);
     }
-  }, [queuePosition, server.maximumPlayers]);
+  }, [queuePosition, server.currentPlayers, server.maximumPlayers]);
 
   const serverUrl = `byond://${server.ipAddress}:${server.port}`;
   async function connectToQueue() {
@@ -76,6 +76,19 @@ export function ServerCard({ server, playerData }: ServerCardProps) {
     }
   }
 
+  function getText() {
+    switch (queueState) {
+      case QueueState.AllowedToConnect:
+        return 'Присоединиться';
+      case QueueState.Banned:
+        return 'Забанен';
+      case QueueState.NotInQueue:
+        return 'Встать в очередь';
+      case QueueState.InQueue:
+        return `В очереди (${queuePosition}й)`;
+    }
+  }
+
   return (
     <Section
       fill
@@ -95,9 +108,13 @@ export function ServerCard({ server, playerData }: ServerCardProps) {
           tooltip={getTooltipText()}
           color={getColor()}
           disabled={disabled}
-          onClick={queueState === QueueState.AllowedToConnect ? () => window.open(serverUrl) : connectToQueue}
+          onClick={() =>
+            queueState === QueueState.NotInQueue
+              ? connectToQueue
+              : queueState === QueueState.AllowedToConnect && window.open(serverUrl)
+          }
         >
-          {queueState === QueueState.InQueue ? `В очереди (${queuePosition}й)` : 'Присоединиться'}
+          {getText()}
         </Button>
       </Stack.Item>
     </Section>
