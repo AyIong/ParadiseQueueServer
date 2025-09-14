@@ -11,25 +11,25 @@ interface ServerCardProps {
 
 export function ServerCard({ server, playerData }: ServerCardProps) {
   const [queueState, setQueueState] = useState(QueueState.NotInQueue);
-  const queuePosition = server.queuePosition;
+  const { queuePosition, maximumPlayers, currentPlayers, whitelisted, ipAddress, port, name } = server;
 
   const banned = playerData.banned;
-  const notWhitelisted = server.whitelisted && !playerData.whitelistPasses?.includes(server.port);
+  const notWhitelisted = whitelisted && !playerData.whitelistPasses?.includes(port);
   const disabled = banned || notWhitelisted;
 
   useEffect(() => {
-    if (server.maximumPlayers === -1) {
+    if (maximumPlayers === -1) {
       setQueueState(QueueState.AllowedToConnect);
     }
 
-    if (queuePosition === 0 && server.currentPlayers < server.maximumPlayers) {
+    if (queuePosition === 0 && currentPlayers < maximumPlayers) {
       setQueueState(QueueState.AllowedToConnect);
     }
-  }, [queuePosition, server.currentPlayers, server.maximumPlayers]);
+  }, [queuePosition, currentPlayers, maximumPlayers]);
 
-  const serverUrl = `byond://${server.ipAddress}:${server.port}`;
+  const serverUrl = `byond://${ipAddress}:${port}`;
   async function connectToQueue() {
-    const response = await fetch(`/queue/add-client?serverName=${server.name}`, {
+    const response = await fetch(`/queue/add-client?serverName=${name}`, {
       method: 'POST',
     }).then((r) => r.json());
 
@@ -90,17 +90,13 @@ export function ServerCard({ server, playerData }: ServerCardProps) {
   }
 
   return (
-    <Section
-      fill
-      title={server.name}
-      className={classes(['ServerCard', server.whitelisted && 'ServerCard--whitelisted'])}
-    >
+    <Section fill title={name} className={classes(['ServerCard', whitelisted && 'ServerCard--whitelisted'])}>
       <Stack.Item className="ServerCard__Content">
         <ServerInfo title="Онлайн">
-          {server.currentPlayers}/{server.maximumPlayers}
+          {currentPlayers}/{maximumPlayers}
         </ServerInfo>
         <Divider />
-        <ServerInfo title="Очередь">{server.queuePosition === 0 ? 'Отсутствует' : server.queuePosition}</ServerInfo>
+        <ServerInfo title="Очередь">{queuePosition === 0 ? 'Отсутствует' : queuePosition}</ServerInfo>
       </Stack.Item>
       <Stack.Item className="ServerCard__Join">
         <Button
